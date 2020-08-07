@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MyPersonalApp</string>
+    <string name="StartItalian">Итальянский</string>
+    <string name="CheckNew">Учить новые слова</string>
+    <string name="CheckOld">Вспомнить старые слова</string>
+    <string name="HowMuch">Вы выучили уже: </string>
+    <string name="Message">Attention, please</string>
+    <string name="WrongFormat">Неверное форматирование в строке: </string>
+</resources>
