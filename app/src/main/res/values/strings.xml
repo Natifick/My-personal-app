@@ -3,6 +3,8 @@
     <string name="TitleStartItalian">Итальянский</string>
     <string name="TitleLearnNewWords">Новые слова</string>
     <string name="TitleLearnOldWords">Старые слова</string>
+    <string name="HintFirstWord">Введите слово на итальянском</string>
+    <string name="HintSecondWord">Введите перевод слова</string>
     <string name="MarkNew">Это слово новое</string>
     <string name="MarkOld">Это слово старое</string>
     <string name="CheckNew">Учить новые слова</string>
@@ -12,5 +14,7 @@
     <string name="HowMuch3">Старых:</string>
     <string name="Message">Attention, please</string>
     <string name="Close">Закрыть</string>
+    <string name="SaveAndExit">Сохранить и выйти</string>
+    <string name="SaveAndNext">Сохранить и ввести следующее слово</string>
     <string name="WrongFormat">Неверное форматирование в строке: </string>
 </resources>
