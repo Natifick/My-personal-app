@@ -12,7 +12,7 @@
         android:background="@drawable/button_shape"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:text="@string/StartItalian"
+        android:text="@string/TitleStartItalian"
         android:onClick="LearnItalian"
         />
 

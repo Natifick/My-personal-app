@@ -41,6 +41,17 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/AddWordButton"
+        android:background="@drawable/button_shape"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="@string/AddWord"
+        android:layout_below="@+id/OldWordsButton"
+        android:onClick="AddWord"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/CloseButton"
         android:background="@drawable/button_shape"
         android:layout_centerHorizontal="true"

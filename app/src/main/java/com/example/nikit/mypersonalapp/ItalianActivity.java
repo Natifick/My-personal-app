@@ -57,6 +57,8 @@ public class ItalianActivity extends AppCompatActivity {
         verifyStoragePermissions(this); // Проверяем, можем ли считывать из external
 
         counter = (TextView) findViewById(R.id.Quantity);
+        AnswerNewWords = new ArrayList<>();
+        AnswerOldWords = new ArrayList<>();
         NewWords = new ArrayList<>();
         OldWords = new ArrayList<>();
 
@@ -67,7 +69,7 @@ public class ItalianActivity extends AppCompatActivity {
             Intent intent = new Intent()
                     .setType("text/plain")
                     .setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Select a file"), 123);
+            startActivityForResult(Intent.createChooser(intent, "Select a file"), 100);
         }
         ReadMap(false);
         if (OldWords.isEmpty()){
@@ -85,6 +87,14 @@ public class ItalianActivity extends AppCompatActivity {
         }
         Intent intent = new Intent(this, LearnWordsActivity.class);
         intent.putExtra("IsNew", flag);
+        intent.putExtra("Old", OldWords);
+        intent.putExtra("New", NewWords);
+        intent.putExtra("AnswerOld", AnswerOldWords);
+        intent.putExtra("AnswerNew", AnswerNewWords);
+        startActivityForResult(intent, 200);
+    }
+    public void AddWord(View view){
+        Intent intent = new Intent(this, AddWordActivity.class);
         intent.putExtra("Old", OldWords);
         intent.putExtra("New", NewWords);
         intent.putExtra("AnswerOld", AnswerOldWords);
@@ -178,6 +188,7 @@ public class ItalianActivity extends AppCompatActivity {
                 }
             }
             FileWords.flush();
+            FileWords.close();
             CountWords();
         }
         catch (IOException e) {
@@ -191,7 +202,7 @@ public class ItalianActivity extends AppCompatActivity {
     @SuppressWarnings("unchecked")
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 123){
+        if (requestCode == 100){
             if(resultCode == RESULT_OK) {
                 MakeNewFile(data.getData());
             }
@@ -202,11 +213,10 @@ public class ItalianActivity extends AppCompatActivity {
         }
         else if (requestCode == 200){
             if (resultCode==RESULT_OK){
-                Intent intent = getIntent();
-                OldWords = (ArrayList<String>)intent.getSerializableExtra("Old");
-                NewWords = (ArrayList<String>)intent.getSerializableExtra("New");
-                AnswerOldWords = (ArrayList<String>)intent.getSerializableExtra("AnswerOld");
-                AnswerNewWords = (ArrayList<String>)intent.getSerializableExtra("AnswerNew");
+                OldWords = (ArrayList<String>)data.getSerializableExtra("Old");
+                NewWords = (ArrayList<String>)data.getSerializableExtra("New");
+                AnswerOldWords = (ArrayList<String>)data.getSerializableExtra("AnswerOld");
+                AnswerNewWords = (ArrayList<String>)data.getSerializableExtra("AnswerNew");
                 CountWords();
                 SaveAll();
             }
@@ -237,6 +247,7 @@ public class ItalianActivity extends AppCompatActivity {
                     FileWords.write(NewWords.get(i) + " - " + AnswerNewWords.get(i) + '\n');
                 }
                 FileWords.flush();
+                FileWords.close();
             }
             catch (IOException e){
                 ShowMessage("Не удалось открыть файл с новыми словами, вы потеряете эти данные");
@@ -251,6 +262,7 @@ public class ItalianActivity extends AppCompatActivity {
                     FileWords.write(OldWords.get(i) + " - " + AnswerOldWords.get(i) + '\n');
                 }
                 FileWords.flush();
+                FileWords.close();
             }
             catch (IOException e){
                 ShowMessage("Не удалось открыть файл со старыми словами, вы потеряете эти данные");

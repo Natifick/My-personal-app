@@ -25,7 +25,7 @@ public class LearnWordsActivity extends AppCompatActivity {
 
         t = (TextView)findViewById(R.id.Word);
         Intent intent = getIntent();
-        fl = intent.getBooleanExtra("fl", false);
+        fl = intent.getBooleanExtra("IsNew", false);
         if (fl){
             this.setTitle(R.string.TitleLearnNewWords);
         }

@@ -14,6 +14,7 @@
     <string name="HowMuch3">Старых:</string>
     <string name="Message">Attention, please</string>
     <string name="Close">Закрыть</string>
+    <string name="AddWord">Добавить слово</string>
     <string name="SaveAndExit">Сохранить и выйти</string>
     <string name="SaveAndNext">Сохранить и ввести следующее слово</string>
     <string name="WrongFormat">Неверное форматирование в строке: </string>

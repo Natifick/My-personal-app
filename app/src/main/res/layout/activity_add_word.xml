@@ -61,6 +61,7 @@
         android:id="@+id/SaveAndExit"
         android:text="@string/SaveAndExit"
         android:layout_marginTop="40dp"
+        android:onClick="CheckWords"
         />
 
 </LinearLayout>

@@ -61,7 +61,6 @@ public class AddWordActivity extends AppCompatActivity {
             }
             first.setText("");
             second.setText("");
-            ChangeRadio(IsNew);
         }
         if (view.getId() == R.id.SaveAndExit){
             exit();
