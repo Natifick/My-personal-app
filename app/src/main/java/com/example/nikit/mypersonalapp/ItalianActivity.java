@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,8 +43,10 @@ public class ItalianActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    HashMap<String, String> NewWords;
-    HashMap<String, String> OldWords; //Будем хранить все данные в хэш-таблицах
+    ArrayList<String> NewWords;
+    ArrayList<String> OldWords;
+    ArrayList<String> AnswerNewWords;
+    ArrayList<String> AnswerOldWords;
     TextView counter; //Часто обращаемся к счётчику слов, полезно запомнить
 
     @Override
@@ -54,8 +57,8 @@ public class ItalianActivity extends AppCompatActivity {
         verifyStoragePermissions(this); // Проверяем, можем ли считывать из external
 
         counter = (TextView) findViewById(R.id.Quantity);
-        NewWords = new HashMap<>();
-        OldWords = new HashMap<>();
+        NewWords = new ArrayList<>();
+        OldWords = new ArrayList<>();
 
         // Читаем файл NewWords.txt если он пуст, то просим пользователя выбрать уже существующий
         ReadMap(true);
@@ -66,26 +69,34 @@ public class ItalianActivity extends AppCompatActivity {
                     .setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, "Select a file"), 123);
         }
-        CountWords(NewWords.size());
         ReadMap(false);
         if (OldWords.isEmpty()){
             DisableButton((Button)findViewById(R.id.OldWordsButton));
         }
+        CountWords();
     }
 
 
 
     public void StartLearning(View view){
+        boolean flag = false;
         if (view.getId()==R.id.NewWordsButton) {
-
+            flag = true;
         }
-        else{
-
-        }
+        Intent intent = new Intent(this, LearnWordsActivity.class);
+        intent.putExtra("IsNew", flag);
+        intent.putExtra("Old", OldWords);
+        intent.putExtra("New", NewWords);
+        intent.putExtra("AnswerOld", AnswerOldWords);
+        intent.putExtra("AnswerNew", AnswerNewWords);
+        startActivityForResult(intent, 200);
     }
 
-    public void CountWords(int count){
-        counter.setText(String.format("%s%d", getResources().getString(R.string.HowMuch), count));
+    @SuppressLint("DefaultLocale")
+    public void CountWords(){
+        counter.setText(String.format("%s %d\n%s %d\n%s %d", getResources().getString(R.string.HowMuch1), OldWords.size()+NewWords.size(),
+                getResources().getString(R.string.HowMuch2), NewWords.size(),
+                getResources().getString(R.string.HowMuch3), OldWords.size()));
     }
 
 
@@ -127,12 +138,14 @@ public class ItalianActivity extends AppCompatActivity {
             while(sc.hasNextLine()) {
                 line = sc.nextLine();
                 if (line.contains(" - ") && line.indexOf(" - ") < line.length() - 3 && line.indexOf(" - ") > 2) {
-                    String substring = line.substring(line.indexOf(" - ") + 3, line.length());
+                    String substring = line.substring(line.indexOf(" - ") + 2, line.length());
                     if (fl) {
-                        NewWords.put(line.substring(0, line.indexOf(" - ")), substring);
+                        NewWords.add(line.substring(0, line.indexOf(" - ")));
+                        AnswerNewWords.add(substring);
                     }
                     else {
-                        OldWords.put(line.substring(0, line.indexOf(" - ")), substring);
+                        OldWords.add(line.substring(0, line.indexOf(" - ")));
+                        AnswerOldWords.add(substring);
                     }
                 }
             }
@@ -149,21 +162,23 @@ public class ItalianActivity extends AppCompatActivity {
             int count = 0;
             String line = br.readLine();
             if (line != null && line.contains(" - ") && line.indexOf(" - ") < line.length()-3 && line.indexOf(" - ") > 2) {
-                NewWords.put(line.substring(0, line.indexOf('-')), line.substring(line.indexOf('-') + 3, line.length()));
+                NewWords.add(line.substring(0, line.indexOf('-')));
+                AnswerNewWords.add(line.substring(line.indexOf('-') + 2, line.length()));
                 FileWords.write(line);
                 count += 1;
             }
             while ((line = br.readLine()) != null) {
                 if (!line.equals("")) {
                     if (line.contains(" - ") && line.indexOf(" - ") < line.length()-3 && line.indexOf(" - ") > 2) {
-                        NewWords.put(line.substring(0, line.indexOf('-')), line.substring(line.indexOf('-') + 3, line.length()));
+                        NewWords.add(line.substring(0, line.indexOf('-')));
+                        AnswerNewWords.add(line.substring(line.indexOf('-') + 2, line.length()));
                         FileWords.write("\n" + line);
                         count += 1;
                     }
                 }
             }
             FileWords.flush();
-            counter.setText(String.format("%s%s слов", counter.getText().subSequence(0, getResources().getString(R.string.HowMuch).length()), count));
+            CountWords();
         }
         catch (IOException e) {
             DisableButton((Button)findViewById(R.id.NewWordsButton));
@@ -173,6 +188,7 @@ public class ItalianActivity extends AppCompatActivity {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 123){
@@ -184,7 +200,20 @@ public class ItalianActivity extends AppCompatActivity {
                 DisableButton((Button)findViewById(R.id.NewWordsButton));
             }
         }
-
+        else if (requestCode == 200){
+            if (resultCode==RESULT_OK){
+                Intent intent = getIntent();
+                OldWords = (ArrayList<String>)intent.getSerializableExtra("Old");
+                NewWords = (ArrayList<String>)intent.getSerializableExtra("New");
+                AnswerOldWords = (ArrayList<String>)intent.getSerializableExtra("AnswerOld");
+                AnswerNewWords = (ArrayList<String>)intent.getSerializableExtra("AnswerNew");
+                CountWords();
+                SaveAll();
+            }
+            else{
+                Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     public void ShowMessage(String ErrMessage){ // Показываем сообщение в отдельной активности
@@ -193,15 +222,19 @@ public class ItalianActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    @Override
-    protected void onDestroy() { // Перед  уничтожением записываем все слова в файлы
+    public void Close(View view){
+        SaveAll();
+        finish();
+    }
+
+    void SaveAll(){
         if (!NewWords.isEmpty()){
             try{
                 // По неведомой причине try с ресурсами не очень хорошо обходится с записью файлов
                 FileOutputStream file = openFileOutput("NewWords.txt", MODE_PRIVATE);
                 OutputStreamWriter FileWords = new OutputStreamWriter(file);
-                for (String s: NewWords.keySet()){
-                    FileWords.write(s + " - " + NewWords.get(s) + '\n');
+                for (int i=0;i<NewWords.size();i++){
+                    FileWords.write(NewWords.get(i) + " - " + AnswerNewWords.get(i) + '\n');
                 }
                 FileWords.flush();
             }
@@ -214,8 +247,8 @@ public class ItalianActivity extends AppCompatActivity {
             try{
                 FileOutputStream file = openFileOutput("OldWords.txt", MODE_PRIVATE);
                 OutputStreamWriter FileWords = new OutputStreamWriter(file);
-                for (String s: OldWords.keySet()){
-                    FileWords.write(s + " - " + OldWords.get(s) + '\n');
+                for (int i=0;i<OldWords.size();i++){
+                    FileWords.write(OldWords.get(i) + " - " + AnswerOldWords.get(i) + '\n');
                 }
                 FileWords.flush();
             }
@@ -224,6 +257,5 @@ public class ItalianActivity extends AppCompatActivity {
                 Log.e("before destroy", "Не удалось сохранить файл", e);
             }
         }
-        super.onDestroy();
     }
 }

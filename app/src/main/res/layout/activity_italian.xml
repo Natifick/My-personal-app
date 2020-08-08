@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/text_view_shape"
-        android:text="@string/HowMuch"
+        android:text=""
         android:id="@+id/Quantity"
         android:textAlignment="center"
         android:textSize="20sp"
@@ -34,8 +34,20 @@
         android:background="@drawable/button_shape"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:layout_below="@+id/NewWordsButton"
         android:text="@string/CheckOld"
+        android:layout_below="@+id/NewWordsButton"
+        android:onClick="StartLearning"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/CloseButton"
+        android:background="@drawable/button_shape"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"
+        android:text="@string/Close"
+        android:layout_alignParentBottom="true"
+        android:onClick="Close"
         />
 
 </RelativeLayout>

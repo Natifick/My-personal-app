@@ -1,10 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".LearnWordsActivity">
 
-  </android.support.constraint.ConstraintLayout>
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/text_view_shape"
+      android:text=""
+      android:id="@+id/Word"
+      android:textAlignment="center"
+      android:textSize="20sp"
+      />
+
+  <Button
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/ItIsNewWord"
+      android:background="@drawable/button_shape"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="40dp"
+      android:text="@string/MarkNew"
+      android:layout_below="@id/Word"
+      android:onClick="MarkAsNew"
+      />
+
+  <Button
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/ItIsOldWord"
+      android:background="@drawable/button_shape"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="40dp"
+      android:text="@string/MarkOld"
+      android:layout_below="@+id/ItIsNewWord"
+      android:onClick="MarkAsOld"
+      />
+  <Button
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/CloseButton"
+      android:background="@drawable/button_shape"
+      android:layout_centerHorizontal="true"
+      android:layout_marginBottom="40dp"
+      android:text="@string/Close"
+      android:layout_alignParentBottom="true"
+      android:onClick="Close"
+      />
+
+</RelativeLayout>
